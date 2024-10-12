@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SysgamingApi.Src.Infrastructure.Persistence;
@@ -11,9 +12,10 @@ using SysgamingApi.Src.Infrastructure.Persistence;
 namespace SysgamingApi.Src.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppPostgresDbContext))]
-    partial class AppPostgresDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241012140619_AddUser")]
+    partial class AddUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

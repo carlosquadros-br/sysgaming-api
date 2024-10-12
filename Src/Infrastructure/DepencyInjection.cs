@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using SysgamingApi.Src.Domain.Persitence;
 using SysgamingApi.Src.Infrastructure.Persistence.Repositories;
 using SysgamingApi.Src.Domain.Persitence.Repositories;
+using SysgamingApi.Src.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace SysgamingApi.Src.Infrastructure;
 
@@ -37,7 +39,14 @@ public static class DepencyInjection
         context.Database.Migrate();
         context.Database.EnsureCreated();
 
+        services.AddIdentity<User, IdentityRole>()
+        .AddEntityFrameworkStores<AppPostgresDbContext>()
+        .AddDefaultTokenProviders();
+
+
         services.AddScoped<IAppDbContext>(provider => provider.GetService<AppPostgresDbContext>());
+
+
 
         services.AddScoped<IBetRepository, BetRepository>();
     }

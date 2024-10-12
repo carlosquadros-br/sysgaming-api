@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SysgamingApi.Src.Application.Bets.Command;
@@ -8,6 +9,7 @@ using SysgamingApi.Src.Domain.Persitence.Repositories;
 
 namespace SysgamingApi.Src.Presentation.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class BetController : ControllerBase

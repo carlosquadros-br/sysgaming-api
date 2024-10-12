@@ -1,17 +1,18 @@
 using System;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SysgamingApi.Src.Domain.Entities;
 using SysgamingApi.Src.Domain.Persitence;
 
 namespace SysgamingApi.Src.Infrastructure.Persistence;
 
-public class AppPostgresDbContext : DbContext, IAppDbContext
+public class AppPostgresDbContext : IdentityDbContext<User>, IAppDbContext
 {
 
     public virtual DbSet<Bet> Bets { get; set; }
 
-    public AppPostgresDbContext(DbContextOptions options) : base(options)
+    public AppPostgresDbContext(DbContextOptions<AppPostgresDbContext> options) : base(options)
     {
     }
 
@@ -26,6 +27,7 @@ public class AppPostgresDbContext : DbContext, IAppDbContext
 
         modelBuilder.Entity<Bet>().HasKey(b => b.Id);
         modelBuilder.Entity<Bet>().Property(b => b.Id).ValueGeneratedOnAdd();
+
 
     }
 }
