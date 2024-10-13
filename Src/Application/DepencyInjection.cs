@@ -24,6 +24,7 @@ using SysgamingApi.Src.Domain.Persitence.Repositories;
 using SysgamingApi.Src.Application.Utils;
 using SysgamingApi.Src.Domain.Persitence;
 using SysgamingApi.Src.Application.Transactions.Mapper;
+using SysgamingApi.Src.Application.AccountBalances.Queries;
 
 namespace SysgamingApi.Src.Application;
 
@@ -46,6 +47,7 @@ public static class DepencyInjection
 
         //balance-account
         services.AddScoped<ICreateAccountBalanceUseCase, CreateAccountBalanceUseCaseImpl>();
+        services.AddScoped<IGetAccountBalanceByUserId, GetAccountBalanceByIdUserImpl>();
         services.AddScoped<DepositAccountUseCaseImpl>();
         services.AddScoped(provider =>
         {

@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using SysgamingApi.Src.Application.AccountBalances.Command.DepositAccount;
+using SysgamingApi.Src.Application.AccountBalances.Queries;
+using SysgamingApi.Src.Domain.Entities;
 using SysgamingApi.Src.Domain.Persitence.Repositories;
 using System.Linq;
 using System.Security.Claims;
@@ -14,22 +16,23 @@ namespace SysgamingApi.Src.Presentation.Controllers
     public class AccountBalanceController : ControllerBase
     {
         private readonly IDepositAccountUseCase _depositAccountUseCase;
-        private readonly IUserRepository _userRepository;
+        private readonly IGetAccountBalanceByUserId _getAccountBalanceByuserId;
 
         public AccountBalanceController(
             IDepositAccountUseCase depositAccountUseCase,
-            IUserRepository userRepository)
+            IGetAccountBalanceByUserId getAccountBalanceByUserId
+            )
         {
             _depositAccountUseCase = depositAccountUseCase;
-            _userRepository = userRepository;
+            _getAccountBalanceByuserId = getAccountBalanceByUserId;
         }
 
         [Authorize]
         [HttpGet]
         [Route("get-my-balance")]
-        public IActionResult GetMyBalance()
+        public async Task<ActionResult<AccountBalance>> GetMyBalance()
         {
-            return Ok("R$ 100,00");
+            return await _getAccountBalanceByuserId.HandleAsync();
         }
 
         [Authorize]
@@ -38,7 +41,6 @@ namespace SysgamingApi.Src.Presentation.Controllers
         public async Task<ActionResult<OperationResponse>> Deposit(decimal amount)
         {
             return await _depositAccountUseCase.Handle(amount);
-
         }
 
     }
