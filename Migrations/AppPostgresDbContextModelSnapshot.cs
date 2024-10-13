@@ -193,7 +193,13 @@ namespace SysgamingApi.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
 
+                    b.Property<DateTime>("CanceledAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("FinishAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("Result")

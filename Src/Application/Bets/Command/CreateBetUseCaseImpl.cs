@@ -9,6 +9,7 @@ using SysgamingApi.Src.Domain.Entities.BetState;
 using SysgamingApi.Src.Domain.Enums;
 using SysgamingApi.Src.Domain.Persitence;
 using SysgamingApi.Src.Domain.Persitence.Repositories;
+using ValidationException = SysgamingApi.Src.Application.Utils.ValidationException;
 
 namespace SysgamingApi.Src.Application.Bets.Command;
 
@@ -34,23 +35,18 @@ public class CreateBetUseCaseImpl : ICreateBetUseCase
         _mapper = mapper;
     }
 
-    public async Task<Bet> ExecuteAsync(CreateBetRequest request)
+    public async Task<Bet?> ExecuteAsync(CreateBetRequest request)
     {
         var isValid = await _createBetValidator.ValidateAsync(request);
 
         var response = new BaseResponse();
         if (isValid.Errors.Count > 0)
         {
-            response.Success = false;
-            response.ValidationErrors = new List<string>();
-            foreach (var error in isValid.Errors)
-            {
-                response.ValidationErrors.Add(error.ErrorMessage);
-            }
+            throw new ValidationException(isValid.Errors[0].ErrorMessage);
         }
 
         if (!response.Success)
-            return await Task.FromResult<Bet>(null);
+            return null;
 
         var bet = _mapper.Map<Bet>(request);
 
@@ -58,12 +54,12 @@ public class CreateBetUseCaseImpl : ICreateBetUseCase
 
         if (bet.UserId == null)
         {
-            throw new Exception("User not logged in");
+            throw new ValidationException("User not logged in");
         }
 
         if (!await UserHaveEnoughBalance(bet))
         {
-            throw new Exception("User does not have enough balance");
+            throw new ValidationException("User does not have enough balance");
         }
 
 
@@ -74,12 +70,12 @@ public class CreateBetUseCaseImpl : ICreateBetUseCase
 
         if (bet == null)
         {
-            throw new Exception("Bet not created");
+            throw new ValidationException("Bet not created");
         }
 
         if (!await UpdateUserBalance(bet))
         {
-            throw new Exception("Error updating user balance");
+            throw new ValidationException("Error updating user balance");
         }
 
         return bet;

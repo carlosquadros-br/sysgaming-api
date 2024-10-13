@@ -17,6 +17,10 @@ public class Bet : Base
     public BetResult Result { get; set; } = BetResult.None;
     public BetStatus Status { get; private set; } = BetStatus.ACTIVE;
 
+    public DateTime FinishAt { get; set; }
+
+    public DateTime CanceledAt { get; set; }
+
     public string GetStatusName()
     {
         return Status switch
@@ -34,7 +38,17 @@ public class Bet : Base
         {
             return false;
         }
+        // Define o status da aposta como finalizado
         Status = BetStatus.FINISHED;
+        FinishAt = DateTime.Now;
+        // Gera um resultado aleatório para a aposta (ganhou ou perdeu)
+        var random = new Random();
+        bool isWin = random.Next(2) == 0; // Gera 0 ou 1 de forma aleatória
+
+        // Atualiza o resultado com base no valor aleatório
+        Result = isWin ? BetResult.Win : BetResult.Lose;
+
+
         return true;
     }
 
@@ -46,6 +60,7 @@ public class Bet : Base
             return false;
         }
         Status = BetStatus.CANCELED;
+        CanceledAt = DateTime.Now;
         return true;
     }
 }

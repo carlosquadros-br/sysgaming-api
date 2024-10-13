@@ -3,6 +3,7 @@ using Microsoft.OpenApi.Models;
 using SysgamingApi.Src.Application;
 using SysgamingApi.Src.Application.Bets.Command;
 using SysgamingApi.Src.Infrastructure;
+using SysgamingApi.Src.Presentation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +16,10 @@ AddInfrastructureDI(builder.Configuration)
 
 
 
-builder.Services.AddControllers().AddFluentValidation(options =>
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add(new GlobalExceptionFilter());
+}).AddFluentValidation(options =>
 {
     options.RegisterValidatorsFromAssembly(typeof(Program).Assembly);
     options.RegisterValidatorsFromAssemblyContaining<CreateBetValidator>();

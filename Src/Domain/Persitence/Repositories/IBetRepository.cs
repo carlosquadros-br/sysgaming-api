@@ -8,4 +8,8 @@ public interface IBetRepository : IBaseRepository<Bet>
 {
 
     Task<Bet> UpdateAsync(Bet bet);
+
+    Task<bool> IsLastFiveBetsIsLose(string userId);
+
+    Task<decimal> GetAmountLastFiveBets(string userId);
 }

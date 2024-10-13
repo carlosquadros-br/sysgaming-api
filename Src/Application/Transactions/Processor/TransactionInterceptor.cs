@@ -21,44 +21,45 @@ public class TransactionInterceptor : IInterceptor
 
     public void Intercept(IInvocation invocation)
     {
-        // Make sure to handle async properly.
-        var isAsync = invocation.Method.ReturnType == typeof(Task) ||
-                      (invocation.Method.ReturnType.IsGenericType && invocation.Method.ReturnType.GetGenericTypeDefinition() == typeof(Task<>));
-
-        if (!isAsync)
-
-            throw new InvalidOperationException("Only async methods are supported for transaction interception.");
-
         invocation.Proceed();
-        HandleOperation(invocation);
+        var task = HandleOperation(invocation);
+        task?.Wait();  // Ensure the task completes
     }
 
-    private async void HandleOperation(IInvocation invocation)
+    private async Task HandleOperation(IInvocation invocation)
     {
+        if (invocation.ReturnValue is null)
+        {
+            return;
+        }
         var response = GetOperationResponse(invocation.ReturnValue);
         if (response is null || response is not OperationResponse operationResponse || !operationResponse.Sucess)
         {
             return;
         }
-        System.Console.WriteLine("TransactionInterceptor: OperationResponse: " + operationResponse);
-        System.Console.WriteLine("TransactionInterceptor: OperationResponse: " + operationResponse.Sucess);
         await _createTransactionUseCase.Handle(mapperRequest(operationResponse));
     }
 
-    private object GetOperationResponse(object originalResponse)
+    private static object? GetOperationResponse(object originalResponse)
     {
         // Assuming the originalResponse is Task<something>, extract the result.
-        if (originalResponse is Task task && task.GetType().IsGenericType)
+        if (originalResponse is Task task)
         {
-            var resultType = task.GetType().GetGenericArguments()[0];
-            var result = task.GetType().GetProperty("Result")?.GetValue(task);
-            if (result != null)
+            if (task.GetType().IsGenericType)
             {
-                return result;
+                // Wait for the task to complete before accessing the result
+                task.Wait();
+
+
+                var resultType = task.GetType().GetGenericArguments()[0];
+                var result = task.GetType().GetProperty("Result")?.GetValue(task);
+                if (result != null)
+                {
+                    return result;
+                }
             }
         }
         return originalResponse;
-
     }
 
     private CreateTransactionRequest mapperRequest(

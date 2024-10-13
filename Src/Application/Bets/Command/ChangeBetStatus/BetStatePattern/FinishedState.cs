@@ -1,6 +1,7 @@
 using SysgamingApi.Src.Application.Bets.Command.ChangeBetStatus.BetStatePattern;
 using SysgamingApi.Src.Application.Bets.Dtos;
 using SysgamingApi.Src.Domain.Entities;
+using SysgamingApi.Src.Domain.Entities.BetState;
 using SysgamingApi.Src.Domain.Persitence.Repositories;
 
 namespace SysgamingApi.Src.Application.Bets.Command.ChangeBetStatus;
@@ -17,7 +18,12 @@ public class FinishedState : AbstractBetSate, IBetState
         var finished = bet.FinishBet();
         if (!finished)
         {
-            return await Task.FromResult(new UpdateBetDto(false, "Não foi possível finalizar a aposta"));
+            var text = "Não foi possível finalizar a aposta";
+            if (bet.Status == BetStatus.CANCELED)
+            {
+                text = "Não é possível finalizar uma aposta cancelada";
+            }
+            return await Task.FromResult(new UpdateBetDto(false, text));
         }
         return await Task.FromResult(new UpdateBetDto(true, "Aposta finalizada com sucesso"));
     }

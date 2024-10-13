@@ -57,32 +57,14 @@ namespace SysgamingApi.Src.Presentation.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<Bet>> CreateBet([FromBody] CreateBetRequest request)
         {
-            try
-            {
 
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-                // Execute use case to create bet
-                var bet = await _createBetUseCase.ExecuteAsync(request);
-                if (bet == null)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, "Bet creation failed. Please try again later.");
-                }
-
-                return CreatedAtAction(nameof(CreateBet), bet);
-            }
-            catch (ValidationException ex)
+            if (!ModelState.IsValid)
             {
-                System.Console.WriteLine($"Validation error: {ex.Message}");
-                return BadRequest(new { message = ex.Message, details = ex.ValidationResult });
+                return BadRequest(ModelState);
             }
-            catch (Exception ex)
-            {
-                System.Console.WriteLine($"An unexpected error occurred: {ex.Message}");
-                return StatusCode(StatusCodes.Status500InternalServerError, "An unexpected error occurred. Please try again later.");
-            }
+            // Execute use case to create bet
+            var bet = await _createBetUseCase.ExecuteAsync(request);
+            return CreatedAtAction(nameof(CreateBet), bet);
         }
 
         [Route("cancel/{betId}")]

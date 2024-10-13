@@ -98,6 +98,14 @@ public class ChangeBetSatusUseCaseImpl : IChangeBetStatusUseCase
         {
             return new OperationResponse(true, TransactionType.OUTPUT, $"{TransactionDescription.BET} : LOST ", value, accountBalance.Balance, bet.UserId, bet?.User?.UserName ?? " ", Currency.BRL.ToString(), DateTime.Now);
         }
+
+        value = bet.Amount * 2;
+        if (await _betRepository.IsLastFiveBetsIsLose(bet.UserId))
+        {
+            var totalLastFiveBets = await _betRepository.GetAmountLastFiveBets(bet.UserId);
+            value = bet.Amount + (totalLastFiveBets * 0.1m);
+        }
+
         var teste = await _accountBalanceRepository.UpdateBalanceAsync(bet.UserId, bet.Amount * 2);
         return new OperationResponse(true, TransactionType.OUTPUT, $"{TransactionDescription.BET} : WON ", value, accountBalance.Balance, bet.UserId, bet?.User?.UserName ?? " ", Currency.BRL.ToString(), DateTime.Now);
     }
