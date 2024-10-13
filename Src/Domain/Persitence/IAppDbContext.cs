@@ -7,7 +7,7 @@ namespace SysgamingApi.Src.Domain.Persitence;
 public interface IAppDbContext : IDisposable
 {
 
-    DbSet<Bet> Bets { get; set; }
+    DbSet<TEntity> Set<TEntity>() where TEntity : class;
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 
 }

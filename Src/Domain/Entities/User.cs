@@ -7,7 +7,6 @@ namespace SysgamingApi.Src.Domain.Entities;
 
 public class User : IdentityUser, IBase
 {
-
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public override string Id { get; set; }

@@ -1,13 +1,17 @@
 using System;
 using FluentValidation;
+using SysgamingApi.Src.Domain.Persitence.Repositories;
 
 namespace SysgamingApi.Src.Application.Users.Command.RegisterUser;
 
 public class RegisterUserValidator : AbstractValidator<RegisterRequest>
 {
-    public RegisterUserValidator() : base()
+
+    IUserRepository _userRepository;
+    public RegisterUserValidator(IUserRepository userRepository) : base()
 
     {
+        _userRepository = userRepository;
         NameIsNotEmpty();
         EmailIsNotEmpty();
         PasswordIsNotEmpty();

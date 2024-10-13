@@ -1,6 +1,7 @@
 using System;
 using FluentValidation;
 using SysgamingApi.Src.Application.Bets.Dtos;
+using SysgamingApi.Src.Domain.Entities;
 
 namespace SysgamingApi.Src.Application.Bets.Command;
 
@@ -9,9 +10,9 @@ public class CreateBetValidator : AbstractValidator<CreateBetRequest>
 
     public CreateBetValidator() : base()
     {
+        RuleFor(x => x.Amount).NotEmpty();
         AmountIsBiggerThanZero();
         AmountIsBiggerThanMinimum();
-        RuleFor(x => x.UserId).NotEmpty();
     }
 
     private void AmountIsBiggerThanZero()

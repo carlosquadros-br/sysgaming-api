@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SysgamingApi.Src.Infrastructure.Persistence;
@@ -11,9 +12,10 @@ using SysgamingApi.Src.Infrastructure.Persistence;
 namespace SysgamingApi.Src.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppPostgresDbContext))]
-    partial class AppPostgresDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241012224330_AddAccountBalance")]
+    partial class AddAccountBalance
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -152,33 +154,6 @@ namespace SysgamingApi.Src.Infrastructure.Persistence.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("SysgamingApi.Src.Domain.Entities.AccountBalance", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text");
-
-                    b.Property<decimal>("Balance")
-                        .HasColumnType("numeric");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("Currency")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AccountBalance");
                 });
 
             modelBuilder.Entity("SysgamingApi.Src.Domain.Entities.Bet", b =>

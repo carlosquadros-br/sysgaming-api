@@ -6,10 +6,13 @@ using SysgamingApi.Src.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHttpContextAccessor();
+
 // Add services to the container.
 builder.Services.
 AddInfrastructureDI(builder.Configuration)
 .AddApplicationDI(builder.Configuration);
+
 
 
 builder.Services.AddControllers().AddFluentValidation(options =>
@@ -21,9 +24,11 @@ builder.Services.AddControllers().AddFluentValidation(options =>
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "Wedding Planner API", Version = "v1" });
+
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
@@ -34,7 +39,8 @@ builder.Services.AddSwaggerGen(options =>
         Type = SecuritySchemeType.ApiKey,
         Scheme = "Bearer"
     });
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
             new OpenApiSecurityScheme
@@ -48,7 +54,7 @@ builder.Services.AddSwaggerGen(options =>
                 Name = "Bearer",
                 In = ParameterLocation.Header,
             },
-            new List<string>()
+            new string[] { }
         }
     });
 });
@@ -62,6 +68,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseAuthentication(); // Add this line
 app.UseAuthorization();
 
 app.MapControllers();

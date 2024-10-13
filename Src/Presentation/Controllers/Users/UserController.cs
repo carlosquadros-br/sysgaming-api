@@ -1,8 +1,10 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SysgamingApi.Src.Application.Users.Command.LoginUser;
 using SysgamingApi.Src.Application.Users.Command.RegisterUser;
+using SysgamingApi.Src.Application.Utils;
 
 namespace SysgamingApi.Src.Presentation.Controllers.Users
 {
@@ -12,13 +14,17 @@ namespace SysgamingApi.Src.Presentation.Controllers.Users
     {
         private readonly IRegisterUserUseCase _registerUserUseCase;
         private readonly ILoginUserUseCase _loginUserUseCase;
+        private readonly ILoggedInUserService _loggedInUserService;
 
         public UserController(
         IRegisterUserUseCase registerUserUseCase,
-        ILoginUserUseCase loginUserUseCase)
+        ILoginUserUseCase loginUserUseCase,
+        ILoggedInUserService loggedInUserService
+        )
         {
             _registerUserUseCase = registerUserUseCase;
             _loginUserUseCase = loginUserUseCase;
+            _loggedInUserService = loggedInUserService;
         }
 
         [AllowAnonymous]
@@ -46,6 +52,18 @@ namespace SysgamingApi.Src.Presentation.Controllers.Users
                 return BadRequest();
 
             return Ok(response);
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("get-me")]
+        public IActionResult GetMe()
+        {
+            var userId = _loggedInUserService.UserId;
+            if (userId == null)
+                return BadRequest();
+
+            return Ok(userId);
         }
 
 
