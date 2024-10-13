@@ -31,13 +31,10 @@ public class CreateTransactionUseCaseImpl : ICreateTransactionUseCase
             var result = await _transactionRepository.CreateAsync(transaction);
             // add websocket
             SendMessage(transaction);
-            System.Console.WriteLine("Transaction created");
             return result;
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
-            Console.WriteLine(e.StackTrace);
             throw new System.Exception("Error creating transaction");
         }
     }

@@ -54,7 +54,6 @@ public class Bet : Base
 
     public bool CancelBet()
     {
-        System.Console.WriteLine("STATOS  ATUAL" + Status);
         if (Status != BetStatus.ACTIVE)
         {
             return false;

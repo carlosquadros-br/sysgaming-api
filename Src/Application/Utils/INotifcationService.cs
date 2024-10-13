@@ -19,8 +19,6 @@ namespace SysgamingApi.Src.Application.Utils
         {
             var id = Guid.NewGuid().ToString();
             Clients[id] = client;
-
-            System.Console.WriteLine("Client connected");
             while (client.State == WebSocketState.Open)
             {
                 var buffer = new byte[1024 * 4];
@@ -36,9 +34,6 @@ namespace SysgamingApi.Src.Application.Utils
 
         public async Task SendNotificationAsync(string message)
         {
-            System.Console.WriteLine("Sending notification");
-            System.Console.WriteLine(Clients.Count);
-            System.Console.WriteLine(message);
             var buffer = System.Text.Encoding.UTF8.GetBytes(message);
             var tasks = Clients.Values
                 .Where(client => client.State == WebSocketState.Open)

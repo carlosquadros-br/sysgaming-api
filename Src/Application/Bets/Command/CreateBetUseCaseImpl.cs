@@ -102,7 +102,6 @@ public class CreateBetUseCaseImpl : ICreateBetUseCase
             return await Task.FromResult(false);
         }
         var account = await _accountBalanceRepository.UpdateBalanceAsync(bet.UserId, -bet.Amount);
-        System.Console.WriteLine("Account balance updated: " + account.Balance);
         return account != null;
     }
 

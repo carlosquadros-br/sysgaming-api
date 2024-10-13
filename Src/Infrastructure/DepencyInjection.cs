@@ -36,7 +36,11 @@ public static class DepencyInjection
 
         services.AddDbContext<AppPostgresDbContext>(options =>
             {
-                var connectionString = configuration.GetConnectionString("PostgreSqlLocal");
+
+                // With Docker 
+                var connectionString = configuration.GetConnectionString("PostgreSqlDocker");
+                // Run Local
+                // var connectionString = configuration.GetConnectionString("PostgreSqlLocal");
                 options.UseNpgsql(connectionString);
             }, ServiceLifetime.Scoped);
 

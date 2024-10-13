@@ -105,12 +105,10 @@ public static class DepencyInjection
                 {
                     OnAuthenticationFailed = context =>
                     {
-                        Console.WriteLine("Authentication failed: " + context.Exception.Message);
                         return Task.CompletedTask;
                     },
                     OnTokenValidated = context =>
                     {
-                        Console.WriteLine("Token validated");
                         return Task.CompletedTask;
                     }
                 };

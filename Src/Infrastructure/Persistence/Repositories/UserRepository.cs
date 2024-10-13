@@ -56,11 +56,6 @@ public class UserRepository : AbstractRepository<User>, IUserRepository, ITokenP
 
     public string GenerateToken(User user)
     {
-        System.Console.WriteLine("Generating token for user: ");
-        System.Console.WriteLine(
-            "Generating token for user: " + _configuration["Jwt:Secret"]
-        );
-        System.Console.WriteLine(user.UserName);
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Secret"]);
         var tokenDescriptor = new SecurityTokenDescriptor
