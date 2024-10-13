@@ -37,7 +37,6 @@ public class ChangeBetSatusUseCaseImpl : IChangeBetStatusUseCase
         }
 
         var oldStatus = bet.Status;
-        System.Console.WriteLine($"Changing bet status from {oldStatus} to {status}");
         IBetState newState = status switch
         {
             BetStatus.ACTIVE => new ActiveState(_betRepository),
