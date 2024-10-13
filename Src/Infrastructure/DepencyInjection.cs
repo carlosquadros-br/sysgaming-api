@@ -34,7 +34,6 @@ public static class DepencyInjection
       )
     {
 
-
         services.AddDbContext<AppPostgresDbContext>(options =>
             {
                 var connectionString = configuration.GetConnectionString("PostgreSqlLocal");
@@ -52,6 +51,7 @@ public static class DepencyInjection
         services.AddScoped<IBetRepository, BetRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ITokenProvider, UserRepository>();
-
+        services.AddScoped<ITransactionRepository, TransactionRepository>();
+        services.AddScoped<IBaseRepository<Transaction>, TransactionRepository>();
     }
 }

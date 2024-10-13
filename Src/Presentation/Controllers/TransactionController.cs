@@ -1,6 +1,6 @@
-using System.Transactions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SysgamingApi.Src.Application.Common.Queries.GetListPaginated;
 using SysgamingApi.Src.Domain.Common;
 using SysgamingApi.Src.Domain.Entities;
 using SysgamingApi.Src.Domain.Persitence.Repositories;
@@ -12,11 +12,12 @@ namespace SysgamingApi.Src.Presentation.Controllers
     public class TransactionController : ControllerBase
     {
 
-        readonly ITransactionRepository _repository;
+        private readonly IGetDataPaginateUseCase<Transaction> _getTransactionPaginatedUseCase;
 
-        TransactionController(ITransactionRepository repository)
+        public TransactionController(
+            IGetDataPaginateUseCase<Transaction> getTransactionPaginatedUseCase)
         {
-            _repository = repository;
+            _getTransactionPaginatedUseCase = getTransactionPaginatedUseCase;
         }
 
         [Route("find-paginated")]
@@ -24,7 +25,7 @@ namespace SysgamingApi.Src.Presentation.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<PaginationList<Transaction>>> GetBetsPaginated([FromQuery] int pageNumber, [FromQuery] int pageSize)
         {
-            return await _repository.GetPaginatedAsync(pageNumber, pageSize);
+            return await _getTransactionPaginatedUseCase.Handle(pageNumber, pageSize);
         }
 
 

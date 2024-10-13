@@ -22,13 +22,11 @@ public class AppPostgresDbContext : IdentityDbContext<User>, IAppDbContext
         _loggedInUserService = loggedInUserService;
     }
 
-    // Implement the generic Set<TEntity> method from IAppDbContext
     public override DbSet<TEntity> Set<TEntity>() where TEntity : class
     {
-        return base.Set<TEntity>(); // Use the base DbContext's Set method
+        return base.Set<TEntity>();
     }
 
-    // Ensure the SaveChangesAsync method is implemented
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         if (_loggedInUserService == null)
@@ -63,12 +61,34 @@ public class AppPostgresDbContext : IdentityDbContext<User>, IAppDbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        modelBuilder.Entity<User>().HasKey(u => u.Id);
+        modelBuilder.Entity<User>().Property(u => u.Id).ValueGeneratedOnAdd();
+
+        //Validators:V-1
+        modelBuilder.Entity<User>(entity =>
+        {
+
+            entity.ToTable("User");
+
+            entity.HasKey(u => u.Id);
+
+            entity.Property(u => u.Email).IsRequired();
+            entity.HasAlternateKey(u => u.Email);
+            entity.HasIndex(u => u.Email).IsUnique();
+        });
+
         modelBuilder.Entity<AccountBalance>().HasKey(ab => ab.Id);
         modelBuilder.Entity<AccountBalance>().Property(ab => ab.Id).ValueGeneratedOnAdd();
+        modelBuilder.Entity<AccountBalance>().HasOne(ab => ab.User).WithOne(u => u.AccountBalance).HasForeignKey<AccountBalance>(ab => ab.UserId);
 
         modelBuilder.Entity<Bet>().HasKey(b => b.Id);
         modelBuilder.Entity<Bet>().Property(b => b.Id).ValueGeneratedOnAdd();
 
-
+        modelBuilder.Entity<Transaction>(entity =>
+        {
+            entity.HasKey(t => t.Id);
+            entity.Property(t => t.Id).ValueGeneratedOnAdd();
+            entity.HasOne(t => t.User).WithMany(u => u.Transactions).HasForeignKey(t => t.UserId);
+        });
     }
 }

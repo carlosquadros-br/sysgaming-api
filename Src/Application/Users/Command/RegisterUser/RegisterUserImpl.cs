@@ -34,12 +34,14 @@ public class RegisterUserImpl : IRegisterUserUseCase
 
         if (!validationResult.IsValid)
             throw new Exception(validationResult.ToString());
+
         try
         {
             await _userRepository.GetbyEmail(request.Email);
         }
         catch (Exception)
         {
+            // Validators: V-1
             throw new Exception("Email User already exists");
         }
 

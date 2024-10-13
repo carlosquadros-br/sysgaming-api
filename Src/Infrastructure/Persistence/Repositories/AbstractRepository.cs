@@ -3,10 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using SysgamingApi.Src.Domain.Common;
 using SysgamingApi.Src.Domain.Entities;
 using SysgamingApi.Src.Domain.Persitence;
+using SysgamingApi.Src.Domain.Persitence.Repositories;
 
 namespace SysgamingApi.Src.Infrastructure.Persistence.Repositories;
 
-public abstract class AbstractRepository<T> where T : class, IBase
+public abstract class AbstractRepository<T> : IBaseRepository<T> where T : class, IBase
 {
     protected readonly IAppDbContext _appDbContext;
     protected readonly DbSet<T> _dbSet;
@@ -16,9 +17,17 @@ public abstract class AbstractRepository<T> where T : class, IBase
         _appDbContext = appDbContext;
         _dbSet = _appDbContext.Set<T>();
     }
-    public async Task<T> GetByIdAsync(string id)
+
+    public virtual async Task<T> CreateAsync(T entity)
     {
-        return await _dbSet.FirstAsync(entity => entity.Id == id);
+        await _dbSet.AddAsync(entity).ConfigureAwait(false);
+        await _appDbContext.SaveChangesAsync();
+        return entity;
+    }
+
+    public async Task<T?> GetByIdAsync(string id)
+    {
+        return await _dbSet.FindAsync(id);
     }
 
     public async Task<PaginationList<T>> GetPaginatedAsync(int page, int pageSize)

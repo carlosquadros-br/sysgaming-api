@@ -1,14 +1,17 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 using SysgamingApi.Src.Domain.Entities.BetState;
 using SysgamingApi.Src.Domain.Enums;
 
 namespace SysgamingApi.Src.Domain.Entities;
 
 
-[Table("Bets")]
+[Table("Bet"), Serializable]
 public class Bet : Base
 {
+    [JsonIgnore]
     public User? User { get; set; }
     public decimal Amount { get; private set; }
     public BetResult Result { get; set; } = BetResult.None;
@@ -37,6 +40,7 @@ public class Bet : Base
 
     public bool CancelBet()
     {
+        System.Console.WriteLine("STATOS  ATUAL" + Status);
         if (Status != BetStatus.ACTIVE)
         {
             return false;

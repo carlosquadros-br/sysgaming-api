@@ -85,20 +85,51 @@ namespace SysgamingApi.Src.Presentation.Controllers
             }
         }
 
-        [Route("change-status/{betId}")]
+        [Route("cancel/{betId}")]
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> ChangeBetStatus([FromRoute] string betId, [FromRoute] BetStatus status)
+        public async Task<ActionResult> CancelBet([FromRoute] string betId)
         {
-            var result = await _changeBetStatusUseCase.Handle(betId, status);
-            if (result)
+            var result = await _changeBetStatusUseCase.Handle(betId, BetStatus.CANCELED);
+            if (result.Sucess)
             {
-                return Ok();
+                return Ok(new
+                {
+                    message = "Bet canceled successfully",
+                    data = new
+                    {
+                        status = result.Sucess,
+                        message = result.Description
+                    }
+                });
             }
-            return NotFound();
+            return StatusCode(StatusCodes.Status406NotAcceptable,
+            new { message = "Error canceling bet", data = result });
         }
 
-
+        [Route("finish/{betId}")]
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> FinishBet([FromRoute] string betId)
+        {
+            var result = await _changeBetStatusUseCase.Handle(betId, BetStatus.FINISHED);
+            if (result.Sucess)
+            {
+                return Ok(new
+                {
+                    success = true,
+                    message = "Bet finished successfully",
+                    data = new
+                    {
+                        status = result.Sucess,
+                        message = result.Description
+                    }
+                });
+            }
+            return StatusCode(StatusCodes.Status406NotAcceptable,
+            new { success = false, message = "Error finishing bet", data = result });
+        }
     }
 }

@@ -35,7 +35,7 @@ namespace SysgamingApi.Src.Presentation.Controllers
         [Authorize]
         [HttpPost]
         [Route("deposit")]
-        public async Task<ActionResult<DepositResponse>> Deposit(decimal amount)
+        public async Task<ActionResult<OperationResponse>> Deposit(decimal amount)
         {
             return await _depositAccountUseCase.Handle(amount);
 

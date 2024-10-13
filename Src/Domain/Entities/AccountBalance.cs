@@ -4,6 +4,7 @@ using SysgamingApi.Src.Domain.Enums;
 
 namespace SysgamingApi.Src.Domain.Entities;
 
+[Table("AccountBalance"), Serializable]
 public sealed class AccountBalance : Base
 {
     public Currency Currency { get; set; } = Currency.BRL;

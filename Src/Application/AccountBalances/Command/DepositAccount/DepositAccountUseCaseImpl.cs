@@ -1,7 +1,11 @@
 using System;
+using SysgamingApi.Src.Application.Transactions.Processor;
 using SysgamingApi.Src.Application.Utils;
+using SysgamingApi.Src.Domain;
+using SysgamingApi.Src.Domain.Enums;
 using SysgamingApi.Src.Domain.Persitence;
 using SysgamingApi.Src.Domain.Persitence.Repositories;
+using SysgamingApi.Src.Domain.Struct;
 
 namespace SysgamingApi.Src.Application.AccountBalances.Command.DepositAccount;
 
@@ -22,7 +26,8 @@ public class DepositAccountUseCaseImpl : IDepositAccountUseCase
         _userRepository = userRepository;
     }
 
-    public async Task<DepositResponse> Handle(decimal request)
+    [Transaction]
+    public async Task<OperationResponse> Handle(decimal request)
     {
         var userId = _loggedInUserService.UserId;
 
@@ -50,7 +55,11 @@ public class DepositAccountUseCaseImpl : IDepositAccountUseCase
                 currency = "BRL";
             }
 
-            var response = new DepositResponse(
+            var response = new OperationResponse(
+                true,
+                TransactionType.INPUT,
+                TransactionDescription.DEPOSIT,
+                request,
                 accountBalance.Balance,
                 userId,
                 user.UserName,
@@ -61,7 +70,18 @@ public class DepositAccountUseCaseImpl : IDepositAccountUseCase
         }
         catch (Exception e)
         {
-            throw new Exception("Error updating balance: " + e.Message);
+            return new OperationResponse(
+                false,
+                TransactionType.INPUT,
+                TransactionDescription.DEPOSIT,
+                request,
+                0,
+                userId,
+                user.UserName,
+                Currency.BRL.ToString(),
+                DateTime.Now
+            );
+
         };
 
 

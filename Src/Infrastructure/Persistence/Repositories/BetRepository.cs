@@ -13,13 +13,10 @@ public class BetRepository : AbstractRepository<Bet>, IBetRepository
     public BetRepository(IAppDbContext appDbContext) : base(appDbContext)
     { }
 
-    public async Task<Bet> CreateAsync(Bet entity)
+    public async Task<Bet> UpdateAsync(Bet entity)
     {
-        entity.Id = Guid.NewGuid().ToString();
-        entity.CreatedAt = DateTime.UtcNow;
-        entity.UpdatedAt = DateTime.UtcNow;
-        await _appDbContext.Set<Bet>().AddAsync(entity);
+        var updated = _appDbContext.Set<Bet>().Update(entity);
         await _appDbContext.SaveChangesAsync();
-        return entity;
+        return updated.Entity;
     }
 }
