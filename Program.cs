@@ -7,7 +7,6 @@ using SysgamingApi.Src.Application.Bets.Command;
 using SysgamingApi.Src.Application.Utils;
 using SysgamingApi.Src.Infrastructure;
 using SysgamingApi.Src.Presentation;
-using SysgamingApi.Src.Presentation.WebSockets;
 
 var builder = WebApplication.CreateBuilder(args);
 
