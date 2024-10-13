@@ -45,7 +45,6 @@ namespace SysgamingApi.Src.Presentation.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<PaginationList<Bet>>> GetBetsPaginated([FromQuery] int pageNumber, [FromQuery] int pageSize)
         {
-            System.Console.WriteLine("Getting bets paginated");
             return await _repository.GetPaginatedAsync(pageNumber, pageSize);
         }
 

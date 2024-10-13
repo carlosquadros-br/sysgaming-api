@@ -40,7 +40,7 @@ public class Bet : Base
         }
         // Define o status da aposta como finalizado
         Status = BetStatus.FINISHED;
-        FinishAt = DateTime.Now;
+        FinishAt = DateTime.UtcNow;
         // Gera um resultado aleatório para a aposta (ganhou ou perdeu)
         var random = new Random();
         bool isWin = random.Next(2) == 0; // Gera 0 ou 1 de forma aleatória
@@ -60,7 +60,7 @@ public class Bet : Base
             return false;
         }
         Status = BetStatus.CANCELED;
-        CanceledAt = DateTime.Now;
+        CanceledAt = DateTime.UtcNow;
         return true;
     }
 }

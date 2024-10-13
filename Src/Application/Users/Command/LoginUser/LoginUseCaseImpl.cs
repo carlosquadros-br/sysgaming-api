@@ -21,10 +21,6 @@ public class LoginUseCaseImpl : ILoginUserUseCase
         var user = await _userRepository.LoginAsync(request.Email, request.Password) ?? throw new Exception("User not found");
 
         var expirationTime = DateTime.UtcNow.AddMinutes(60);
-
-        System.Console.WriteLine("User logged in");
-        System.Console.WriteLine("User: " + user.UserName);
-        System.Console.WriteLine("Expiration time: " + expirationTime);
         try
         {
             var token = _tokenProvider.GenerateToken(user);
@@ -32,8 +28,7 @@ public class LoginUseCaseImpl : ILoginUserUseCase
         }
         catch (System.Exception e)
         {
-            System.Console.WriteLine("Error generating token: " + e.Message);
-            throw;
+            throw new System.Exception("Error generating token");
         }
 
         return new TokenResponse(_tokenProvider.GenerateToken(user), expirationTime, user);

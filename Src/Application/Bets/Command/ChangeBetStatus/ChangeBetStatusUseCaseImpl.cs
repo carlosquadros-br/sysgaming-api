@@ -33,7 +33,7 @@ public class ChangeBetSatusUseCaseImpl : IChangeBetStatusUseCase
 
         if (bet == null)
         {
-            return new OperationResponse(false, null, "Bet not found!", 0, 0, null, null, null, DateTime.Now);
+            return new OperationResponse(false, null, "Bet not found!", 0, 0, null, null, null, DateTime.UtcNow);
         }
 
         var oldStatus = bet.Status;
@@ -49,7 +49,7 @@ public class ChangeBetSatusUseCaseImpl : IChangeBetStatusUseCase
 
         if (!change.updated)
         {
-            return new OperationResponse(false, null, change.message, 0, 0, null, null, null, DateTime.Now);
+            return new OperationResponse(false, null, change.message, 0, 0, null, null, null, DateTime.UtcNow);
         }
 
         var saved = await _betRepository.UpdateAsync(bet);
@@ -57,7 +57,7 @@ public class ChangeBetSatusUseCaseImpl : IChangeBetStatusUseCase
         {
             return await HandleWithAccountBalance(bet);
         }
-        return new OperationResponse(false, null, "Error saving bet", 0, 0, null, null, null, DateTime.Now);
+        return new OperationResponse(false, null, "Error saving bet", 0, 0, null, null, null, DateTime.UtcNow);
 
 
     }
@@ -66,14 +66,14 @@ public class ChangeBetSatusUseCaseImpl : IChangeBetStatusUseCase
     {
         if (bet == null || bet.Status == BetStatus.ACTIVE)
         {
-            return new OperationResponse(false, null, null, 0, 0, null, null, null, DateTime.Now);
+            return new OperationResponse(false, null, null, 0, 0, null, null, null, DateTime.UtcNow);
         }
 
         var accountBalance = await _accountBalanceRepository.GetByUserIdAsync(bet.UserId);
 
         if (accountBalance == null)
         {
-            return new OperationResponse(false, null, null, 0, 0, null, null, null, DateTime.Now);
+            return new OperationResponse(false, null, null, 0, 0, null, null, null, DateTime.UtcNow);
         }
         var value = bet.Amount;
         var result = bet.Status switch
@@ -90,13 +90,13 @@ public class ChangeBetSatusUseCaseImpl : IChangeBetStatusUseCase
     {
         if (bet.Result == BetResult.None)
         {
-            return new OperationResponse(false, null, null, 0, 0, null, null, null, DateTime.Now);
+            return new OperationResponse(false, null, null, 0, 0, null, null, null, DateTime.UtcNow);
         }
         var value = bet.Amount;
 
         if (bet.Result == BetResult.Lose)
         {
-            return new OperationResponse(true, TransactionType.OUTPUT, $"{TransactionDescription.BET} : LOST ", value, accountBalance.Balance, bet.UserId, bet?.User?.UserName ?? " ", Currency.BRL.ToString(), DateTime.Now);
+            return new OperationResponse(true, TransactionType.OUTPUT, $"{TransactionDescription.BET} : LOST ", value, accountBalance.Balance, bet.UserId, bet?.User?.UserName ?? " ", Currency.BRL.ToString(), DateTime.UtcNow);
         }
 
         value = bet.Amount * 2;
@@ -107,17 +107,17 @@ public class ChangeBetSatusUseCaseImpl : IChangeBetStatusUseCase
         }
 
         var teste = await _accountBalanceRepository.UpdateBalanceAsync(bet.UserId, bet.Amount * 2);
-        return new OperationResponse(true, TransactionType.OUTPUT, $"{TransactionDescription.BET} : WON ", value, accountBalance.Balance, bet.UserId, bet?.User?.UserName ?? " ", Currency.BRL.ToString(), DateTime.Now);
+        return new OperationResponse(true, TransactionType.OUTPUT, $"{TransactionDescription.BET} : WON ", value, accountBalance.Balance, bet.UserId, bet?.User?.UserName ?? " ", Currency.BRL.ToString(), DateTime.UtcNow);
     }
 
 
     private async Task<OperationResponse> HandleCanceled(Bet bet, AccountBalance accountBalance)
     {
         if (bet.Result != BetResult.None)
-            return new OperationResponse(false, null, null, 0, 0, null, null, null, DateTime.Now);
+            return new OperationResponse(false, null, null, 0, 0, null, null, null, DateTime.UtcNow);
         var value = bet.Amount;
         var AccountUpdated = await _accountBalanceRepository.UpdateBalanceAsync(bet.UserId, bet.Amount);
-        return new OperationResponse(true, TransactionType.OUTPUT, $"{TransactionDescription.BET} : CANCELED ", value, accountBalance.Balance, bet.UserId, bet?.User?.UserName ?? " ", Currency.BRL.ToString(), DateTime.Now);
+        return new OperationResponse(true, TransactionType.OUTPUT, $"{TransactionDescription.BET} : CANCELED ", value, accountBalance.Balance, bet.UserId, bet?.User?.UserName ?? " ", Currency.BRL.ToString(), DateTime.UtcNow);
     }
 
 

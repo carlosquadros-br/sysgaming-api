@@ -79,7 +79,7 @@ public class DepositAccountUseCaseImpl : IDepositAccountUseCase
                 userId,
                 user.UserName,
                 Currency.BRL.ToString(),
-                DateTime.Now
+                DateTime.UtcNow
             );
 
         };

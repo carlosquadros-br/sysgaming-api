@@ -1,9 +1,13 @@
+using System.Net.WebSockets;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using SysgamingApi.Src.Application;
 using SysgamingApi.Src.Application.Bets.Command;
+using SysgamingApi.Src.Application.Utils;
 using SysgamingApi.Src.Infrastructure;
 using SysgamingApi.Src.Presentation;
+using SysgamingApi.Src.Presentation.WebSockets;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,12 +30,11 @@ builder.Services.AddControllers(options =>
 
 });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Wedding Planner API", Version = "v1" });
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Sysgaming Bets API", Version = "v1" });
 
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -65,16 +68,48 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseAuthentication(); // Add this line
+app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseWebSockets(new WebSocketOptions
+{
+    KeepAliveInterval = TimeSpan.FromMinutes(1)
+});
+
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/ws" && context.WebSockets.IsWebSocketRequest)
+    {
+        WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
+        var notificationService = context.RequestServices.GetRequiredService<INotifcationService>();
+        await notificationService.CreateConnection(webSocket);
+        await ReceiveMessages(webSocket, notificationService);
+    }
+    else
+    {
+        await next();
+    }
+});
 app.MapControllers();
 
 app.Run();
+
+async Task ReceiveMessages(WebSocket webSocket, INotifcationService notificationService)
+{
+    var buffer = new byte[1024 * 4];
+    WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+
+    while (!result.CloseStatus.HasValue)
+    {
+        string message = System.Text.Encoding.UTF8.GetString(buffer, 0, result.Count);
+        result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+    }
+
+    await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
+}

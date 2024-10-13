@@ -116,8 +116,10 @@ public static class DepencyInjection
                 };
             });
 
+        services.AddSingleton<INotifcationService, NotificationServiceImpl>();
         return services;
     }
+
 
     private static void AddMapper(IServiceCollection services)
     {

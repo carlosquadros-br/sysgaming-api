@@ -1,5 +1,7 @@
 using System;
+using System.Text.Json;
 using AutoMapper;
+using SysgamingApi.Src.Application.Utils;
 using SysgamingApi.Src.Domain.Entities;
 using SysgamingApi.Src.Domain.Persitence.Repositories;
 
@@ -8,14 +10,17 @@ public class CreateTransactionUseCaseImpl : ICreateTransactionUseCase
 {
     private readonly ITransactionRepository _transactionRepository;
     private readonly IMapper _mapper;
+    private readonly INotifcationService _notificationService;
 
     public CreateTransactionUseCaseImpl(
         ITransactionRepository transactionRepository,
-        IMapper mapper
+        IMapper mapper,
+        INotifcationService notifcationService
         )
     {
         _transactionRepository = transactionRepository;
         _mapper = mapper;
+        _notificationService = notifcationService;
     }
 
     public async Task<Transaction> Handle(CreateTransactionRequest request)
@@ -25,6 +30,7 @@ public class CreateTransactionUseCaseImpl : ICreateTransactionUseCase
             var transaction = _mapper.Map<Transaction>(request);
             var result = await _transactionRepository.CreateAsync(transaction);
             // add websocket
+            SendMessage(transaction);
             System.Console.WriteLine("Transaction created");
             return result;
         }
@@ -34,5 +40,10 @@ public class CreateTransactionUseCaseImpl : ICreateTransactionUseCase
             Console.WriteLine(e.StackTrace);
             throw new System.Exception("Error creating transaction");
         }
+    }
+
+    private void SendMessage(Transaction transaction)
+    {
+        _notificationService.SendNotificationAsync(JsonSerializer.Serialize(transaction));
     }
 }
