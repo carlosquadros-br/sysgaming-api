@@ -1,18 +1,17 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SysgamingApi.Src.Domain.Entities;
 
-public abstract class Base
+public abstract class Base : IBase
 {
-
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public Guid Id { get; set; }
+    public string Id { get; set; }
 
-    public DateTime CreateAt { get; set; }
+    [ForeignKey("UserId")]
+    public string UserId { get; set; }
+    public DateTime CreatedAt { get; set; }
 
-    public DateTime UpdateAt { get; set; }
-
+    public DateTime UpdatedAt { get; set; }
 }

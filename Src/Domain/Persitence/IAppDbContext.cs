@@ -1,11 +1,13 @@
 using System;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SysgamingApi.Src.Domain.Entities;
 namespace SysgamingApi.Src.Domain.Persitence;
 
-public interface IAppDbContext
+public interface IAppDbContext : IDisposable
 {
 
-    DbSet<T> Set<T>() where T : class;
+    DbSet<TEntity> Set<TEntity>() where TEntity : class;
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 
 }

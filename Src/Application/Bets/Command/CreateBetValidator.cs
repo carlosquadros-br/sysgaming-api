@@ -1,33 +1,27 @@
 using System;
+using FluentValidation;
 using SysgamingApi.Src.Application.Bets.Dtos;
+using SysgamingApi.Src.Domain.Entities;
 
 namespace SysgamingApi.Src.Application.Bets.Command;
 
-public static class CreateBetValidator
+public class CreateBetValidator : AbstractValidator<CreateBetRequest>
 {
-    public static void Validate(CreateBetRequest request)
+
+    public CreateBetValidator() : base()
     {
-        if (request == null)
-            throw new ArgumentNullException(nameof(request));
-        AmountIsBiggerThanZero(request);
-        AmountIsBiggerThanMinimum(request);
+        RuleFor(x => x.Amount).NotEmpty();
+        AmountIsBiggerThanZero();
+        AmountIsBiggerThanMinimum();
     }
 
-    private static void AmountIsBiggerThanZero(CreateBetRequest request)
+    private void AmountIsBiggerThanZero()
     {
-        var passed = request.Amount > 0;
-        if (!passed)
-        {
-            throw new ArgumentException("Amount must be greater than 0");
-        }
+        RuleFor(x => x.Amount).GreaterThan(0).WithMessage("Amount must be bigger than 0");
     }
 
-    private static void AmountIsBiggerThanMinimum(CreateBetRequest request)
+    private void AmountIsBiggerThanMinimum()
     {
-        var passed = request.Amount > 1;
-        if (!passed)
-        {
-            throw new ArgumentException("Amount must be greater than 1");
-        }
+        RuleFor(x => x.Amount).GreaterThan(1).WithMessage("Amount must be bigger than 1");
     }
 }

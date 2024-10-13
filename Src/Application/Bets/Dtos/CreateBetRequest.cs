@@ -1,15 +1,13 @@
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace SysgamingApi.Src.Application.Bets.Dtos;
 
 public class CreateBetRequest
 {
-    public string UserId { get; set; }
 
-    public string GameId { get; set; }
-
-    public string TeamId { get; set; }
-
+    [Required]
     public decimal Amount { get; set; }
 
 }

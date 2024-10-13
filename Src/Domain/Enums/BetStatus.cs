@@ -2,8 +2,10 @@ using System;
 
 namespace SysgamingApi.Src.Domain.Entities.BetState;
 
-public interface IBetState
+public enum BetStatus
 {
+    ACTIVE,
+    FINISHED,
+    CANCELED
 
-    public void Create();
 }

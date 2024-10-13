@@ -11,6 +11,5 @@ public interface ICreateTransactionUseCase
 
 public class CreateTransactionRequest
 {
-    public string UserId { get; set; }
 
 }
