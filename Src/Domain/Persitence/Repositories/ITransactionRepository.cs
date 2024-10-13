@@ -1,9 +1,9 @@
-using System.Transactions;
 using SysgamingApi.Src.Domain.Common;
+using SysgamingApi.Src.Domain.Entities;
 
 namespace SysgamingApi.Src.Domain.Persitence.Repositories
 {
-    interface ITransactionRepository : IBaseRepository<Transaction>
+    public interface ITransactionRepository : IBaseRepository<Transaction>
     {
     }
 }

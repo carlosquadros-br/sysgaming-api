@@ -6,5 +6,5 @@ namespace SysgamingApi.Src.Application.Bets.Command;
 
 public interface ICreateBetUseCase
 {
-    Task<Bet> ExecuteAsync(CreateBetRequest request);
+    Task<Bet?> ExecuteAsync(CreateBetRequest request);
 }

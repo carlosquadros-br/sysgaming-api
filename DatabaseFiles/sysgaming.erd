@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diagram version="1" name="sysgaming">
+	<entities>
+		<data-source id="postgres-jdbc-1926ec4481c-6f7f69004a5e541d">
+			<entity id="1" name="AccountBalance" fq-name="public.&quot;AccountBalance&quot;">
+				<path name="public"/>
+				<path name="sysgaming"/>
+			</entity>
+			<entity id="2" name="AspNetRoleClaims" fq-name="public.&quot;AspNetRoleClaims&quot;">
+				<path name="public"/>
+				<path name="sysgaming"/>
+			</entity>
+			<entity id="3" name="AspNetRoles" fq-name="public.&quot;AspNetRoles&quot;">
+				<path name="public"/>
+				<path name="sysgaming"/>
+			</entity>
+			<entity id="4" name="AspNetUserClaims" fq-name="public.&quot;AspNetUserClaims&quot;">
+				<path name="public"/>
+				<path name="sysgaming"/>
+			</entity>
+			<entity id="5" name="AspNetUserLogins" fq-name="public.&quot;AspNetUserLogins&quot;">
+				<path name="public"/>
+				<path name="sysgaming"/>
+			</entity>
+			<entity id="6" name="AspNetUserRoles" fq-name="public.&quot;AspNetUserRoles&quot;">
+				<path name="public"/>
+				<path name="sysgaming"/>
+			</entity>
+			<entity id="7" name="AspNetUserTokens" fq-name="public.&quot;AspNetUserTokens&quot;">
+				<path name="public"/>
+				<path name="sysgaming"/>
+			</entity>
+			<entity id="8" name="Bet" fq-name="public.&quot;Bet&quot;">
+				<path name="public"/>
+				<path name="sysgaming"/>
+			</entity>
+			<entity id="9" name="Transaction" fq-name="public.&quot;Transaction&quot;">
+				<path name="public"/>
+				<path name="sysgaming"/>
+			</entity>
+			<entity id="10" name="User" fq-name="public.&quot;User&quot;">
+				<path name="public"/>
+				<path name="sysgaming"/>
+			</entity>
+			<entity id="11" name="__EFMigrationsHistory" fq-name="public.&quot;__EFMigrationsHistory&quot;">
+				<path name="public"/>
+				<path name="sysgaming"/>
+			</entity>
+		</data-source>
+	</entities>
+	<relations>
+		<relation name="FK_AspNetRoleClaims_AspNetRoles_RoleId" fq-name="public.&quot;AspNetRoleClaims&quot;.&quot;FK_AspNetRoleClaims_AspNetRoles_RoleId&quot;" type="fk" pk-ref="3" fk-ref="2"/>
+		<relation name="FK_AspNetUserRoles_AspNetRoles_RoleId" fq-name="public.&quot;AspNetUserRoles&quot;.&quot;FK_AspNetUserRoles_AspNetRoles_RoleId&quot;" type="fk" pk-ref="3" fk-ref="6"/>
+		<relation name="FK_AccountBalance_User_UserId" fq-name="public.&quot;AccountBalance&quot;.&quot;FK_AccountBalance_User_UserId&quot;" type="fk" pk-ref="10" fk-ref="1"/>
+		<relation name="FK_AspNetUserClaims_User_UserId" fq-name="public.&quot;AspNetUserClaims&quot;.&quot;FK_AspNetUserClaims_User_UserId&quot;" type="fk" pk-ref="10" fk-ref="4"/>
+		<relation name="FK_AspNetUserLogins_User_UserId" fq-name="public.&quot;AspNetUserLogins&quot;.&quot;FK_AspNetUserLogins_User_UserId&quot;" type="fk" pk-ref="10" fk-ref="5"/>
+		<relation name="FK_AspNetUserRoles_User_UserId" fq-name="public.&quot;AspNetUserRoles&quot;.&quot;FK_AspNetUserRoles_User_UserId&quot;" type="fk" pk-ref="10" fk-ref="6"/>
+		<relation name="FK_AspNetUserTokens_User_UserId" fq-name="public.&quot;AspNetUserTokens&quot;.&quot;FK_AspNetUserTokens_User_UserId&quot;" type="fk" pk-ref="10" fk-ref="7"/>
+		<relation name="FK_Bet_User_UserId" fq-name="public.&quot;Bet&quot;.&quot;FK_Bet_User_UserId&quot;" type="fk" pk-ref="10" fk-ref="8"/>
+		<relation name="FK_Transaction_User_UserId" fq-name="public.&quot;Transaction&quot;.&quot;FK_Transaction_User_UserId&quot;" type="fk" pk-ref="10" fk-ref="9"/>
+	</relations>
+</diagram>

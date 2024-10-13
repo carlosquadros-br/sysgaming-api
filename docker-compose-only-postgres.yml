@@ -1,0 +1,13 @@
+services:
+  database:
+    image: postgres:latest
+    container_name: database
+    environment:
+      - POSTGRES_DB=sysgaming
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+    volumes:
+      - ./containers/sysgaming-db:/var/lib/postgresql/data
+    ports:
+      - 5433:5433
+    command: -p 5433

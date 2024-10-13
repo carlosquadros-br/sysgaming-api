@@ -4,7 +4,7 @@ namespace SysgamingApi.Src.Domain.Common;
 
 public class PaginationList<T>
 {
-    public IReadOnlyCollection<T>? Items { get; }
+    public IReadOnlyCollection<T>? Data { get; }
     public int PageNumber { get; }
     public int TotalPages { get; }
     public int TotalCount { get; }
@@ -14,6 +14,6 @@ public class PaginationList<T>
         PageNumber = pageNumber;
         TotalPages = (int)Math.Ceiling(count / (double)pageSize);
         TotalCount = count;
-        Items = items;
+        Data = items;
     }
 }
