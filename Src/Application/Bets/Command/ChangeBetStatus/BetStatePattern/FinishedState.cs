@@ -11,6 +11,8 @@ namespace SysgamingApi.Src.Application.Bets.Command.ChangeBetStatus;
 // FinishedState.cs
 public class FinishedState : AbstractBetSate, IBetState
 {
+    private static readonly Random _random = new Random();
+    
     public FinishedState(IBetRepository betRepository) : base(betRepository)
     {
     }
@@ -32,8 +34,7 @@ public class FinishedState : AbstractBetSate, IBetState
         bet.FinishAt = DateTime.UtcNow;
         
         // Gera um resultado aleatório para a aposta (ganhou ou perdeu)
-        var random = new Random();
-        bool isWin = random.Next(2) == 0; // Gera 0 ou 1 de forma aleatória
+        bool isWin = _random.Next(2) == 0; // Gera 0 ou 1 de forma aleatória
 
         // Atualiza o resultado com base no valor aleatório
         bet.Result = isWin ? BetResult.Win : BetResult.Lose;
