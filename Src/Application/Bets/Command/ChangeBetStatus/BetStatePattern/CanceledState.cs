@@ -1,6 +1,8 @@
+using System;
 using SysgamingApi.Src.Application.Bets.Command.ChangeBetStatus.BetStatePattern;
 using SysgamingApi.Src.Application.Bets.Dtos;
 using SysgamingApi.Src.Domain.Entities;
+using SysgamingApi.Src.Domain.Entities.BetState;
 using SysgamingApi.Src.Domain.Persitence.Repositories;
 
 namespace SysgamingApi.Src.Application.Bets.Command.ChangeBetStatus;
@@ -14,9 +16,14 @@ public class CanceledState : AbstractBetSate, IBetState
 
     override public async Task<UpdateBetDto> ChangeStateAsync(Bet bet)
     {
-        var canceled = bet.CancelBet();
-        if (!canceled)
+        if (bet.Status != BetStatus.ACTIVE)
+        {
             return new UpdateBetDto(false, "Não foi possível cancelar a aposta");
+        }
+        
+        bet.Status = BetStatus.CANCELED;
+        bet.CanceledAt = DateTime.UtcNow;
+        
         return new UpdateBetDto(true, "Aposta cancelada com sucesso");
     }
 }
